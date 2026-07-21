@@ -333,8 +333,9 @@ textarea{resize:vertical;min-height:88px}
           <span class="rp-title" id="fbr-student"></span>
           <span class="rp-date" id="fbr-date"></span>
         </div>
+        <img id="fbr-photo-img" src="" alt="숙제 사진" style="width:100%;border-radius:12px;margin-bottom:10px;display:none">
         <a id="fbr-photo" href="#" target="_blank" rel="noopener" class="share-btn"
-          style="display:inline-block;margin:0 0 12px">📷 숙제 사진 보기</a>
+          style="display:inline-block;margin:0 0 12px">📷 사진 원본 크게 보기</a>
         <div class="field"><label>첨삭 피드백 (수정 가능)</label>
           <textarea id="fbr-text" rows="8"></textarea></div>
         <div class="field"><label>독해 점수 (0–100)</label>
@@ -563,6 +564,13 @@ function closeModal(id){ document.getElementById(id).classList.remove('show');
   if (id === 'modal-rpreview' && currentStudent) loadReports(); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+/** Drive 'file/d/파일ID/view' 링크를 <img> 임베드용 썸네일 URL로 변환 */
+function driveThumbUrl(url){
+  if (!url) return '';
+  var m = String(url).match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (!m) return '';
+  return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000';
+}
 function thisMonth(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
 function today(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
@@ -995,6 +1003,10 @@ function openFbReviewModal(r){
     currentStudent.name + ' · ' + currentStudent.grade;
   document.getElementById('fbr-date').textContent = r.date;
   document.getElementById('fbr-photo').href = r.image_url || '#';
+  var img = document.getElementById('fbr-photo-img');
+  var thumb = driveThumbUrl(r.image_url);
+  if (thumb) { img.src = thumb; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
   document.getElementById('fbr-text').value = r.final_feedback || '';
   document.getElementById('fbr-score').value =
     (r.reading_score !== '' && r.reading_score != null) ? r.reading_score : '';
