@@ -953,7 +953,7 @@ function compressImage(file){
     reader.onload = function(){ img.src = reader.result; };
     reader.onerror = reject;
     img.onload = function(){
-      var MAX = 1600;
+      var MAX = 2200;
       var w = img.width, hgt = img.height;
       if (w > MAX || hgt > MAX) {
         var ratio = Math.min(MAX / w, MAX / hgt);
@@ -962,7 +962,7 @@ function compressImage(file){
       var canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = hgt;
       canvas.getContext('2d').drawImage(img, 0, 0, w, hgt);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       resolve(dataUrl.split(',')[1]);
     };
     img.onerror = reject;
